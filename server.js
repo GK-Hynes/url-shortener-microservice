@@ -19,15 +19,21 @@ app.get("/", function (req, res) {
 app.post("/api/shorturl/new", (req, res) => {
   // Check if passed URL is valid URL
   const originalUrl = req.body.url;
-  const urlRegex = /^https?:\/\//i;
-  const hostname = originalUrl.replace(urlRegex, "");
+  // Remove protocol
+  const protocolRegex = /^https?:\/\//i;
+  const hostname = originalUrl.replace(protocolRegex, "");
+  // Remove subdirectories
+  const subDirectoryIndex = hostname.indexOf("/");
+  const dnsUrl =
+    subDirectoryIndex < 0 ? hostname : hostname.slice(0, subDirectoryIndex);
 
-  dns.lookup(hostname, (err, address, family) => {
+  dns.lookup(dnsUrl, (err, address, family) => {
     if (err === null) {
       const shortUrl = crypto.randomBytes(4).toString("hex");
       res.json({ original_url: originalUrl, short_url: shortUrl });
     } else {
       console.log(err);
+      res.send("Not a valid URL");
     }
   });
 });
