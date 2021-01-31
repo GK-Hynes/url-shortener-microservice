@@ -1,7 +1,7 @@
 const dns = require("dns");
 const cypto = require("crypto");
 
-function validateUrl() {
+function validateUrl(originalUrl) {
   // Remove protocol
   const protocolRegex = /^https?:\/\//i;
   const hostname = originalUrl.replace(protocolRegex, "");
