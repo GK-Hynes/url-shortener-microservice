@@ -54,9 +54,22 @@ app.post("/api/shorturl/new", async (req, res) => {
   }
 });
 
-app.get("/api/shorturl/:short_url", (req, res) => {
+app.get("/api/shorturl/:short_url", async (req, res) => {
   // Check for existing short URL
   // Redirect to original URL
+  const shortCode = req.params.short_url;
+
+  try {
+    let url = await Url.findOne({ shortCode });
+    if (url) {
+      return res.redirect(url.originalUrl);
+    } else {
+      return res.status(404).json("No url found");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json("Server error");
+  }
 });
 
 app.listen(port, function () {
