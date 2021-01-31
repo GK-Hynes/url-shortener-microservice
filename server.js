@@ -1,10 +1,14 @@
 require("dotenv").config();
+
 const crypto = require("crypto");
 const dns = require("dns");
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+
 const connectDB = require("./db");
+const Url = require("./models/Url");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -20,26 +24,34 @@ app.get("/", function (req, res) {
   res.sendFile(process.cwd() + "/views/index.html");
 });
 
-app.post("/api/shorturl/new", (req, res) => {
-  // Check if passed URL is valid URL
-  const originalUrl = req.body.url;
-  // Remove protocol
-  const protocolRegex = /^https?:\/\//i;
-  const hostname = originalUrl.replace(protocolRegex, "");
-  // Remove subdirectories
-  const subDirectoryIndex = hostname.indexOf("/");
-  const dnsUrl =
-    subDirectoryIndex < 0 ? hostname : hostname.slice(0, subDirectoryIndex);
+app.post("/api/shorturl/new", async (req, res) => {
+  // TODO - Check if passed URL is valid URL
 
-  dns.lookup(dnsUrl, (err, address, family) => {
-    if (err === null) {
-      const shortUrl = crypto.randomBytes(4).toString("hex");
-      res.json({ original_url: originalUrl, short_url: shortUrl });
+  const originalUrl = req.body.url;
+  const baseUrl = process.env.BASE_URL;
+  const shortCode = crypto.randomBytes(4).toString("hex");
+
+  try {
+    let url = await Url.findOne({ originalUrl });
+    if (url) {
+      res.json({ original_url: url.originalUrl, short_url: url.shortUrl });
     } else {
-      console.log(err);
-      res.send("Not a valid URL");
+      const shortUrl = baseUrl + "/" + shortCode;
+
+      url = new Url({
+        originalUrl,
+        shortUrl,
+        shortCode
+      });
+
+      await url.save();
+
+      res.json({ original_url: originalUrl, short_url: shortUrl });
     }
-  });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json("Server error");
+  }
 });
 
 app.get("/api/shorturl/:short_url", (req, res) => {
