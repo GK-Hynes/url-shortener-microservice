@@ -1,15 +1,20 @@
 require("dotenv").config();
-const express = require("express");
-const Url = require("../models/Url");
 const crypto = require("crypto");
+const express = require("express");
+const { isWebUri } = require("valid-url");
+const Url = require("../models/Url");
 
 const router = express.Router();
 
 router.post("/api/shorturl/new", async (req, res) => {
-  // TODO - Check if passed URL is valid URL
-
   const originalUrl = req.body.url;
   const baseUrl = process.env.BASE_URL;
+
+  // Check if passed URL is valid URL
+  if (!isWebUri(originalUrl)) {
+    return res.status(400).json({ error: "invalid url" });
+  }
+
   const shortCode = crypto.randomBytes(4).toString("hex");
 
   try {
