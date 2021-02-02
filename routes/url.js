@@ -15,25 +15,21 @@ router.post("/api/shorturl/new", async (req, res) => {
     return res.status(400).json({ error: "invalid url" });
   }
 
+  // Generate shortCode for short URL
   const shortCode = crypto.randomBytes(4).toString("hex");
 
   try {
     // Check if URL is already in db
     let url = await Url.findOne({ originalUrl });
     if (url) {
-      res.json({ original_url: url.originalUrl, short_url: url.shortUrl });
+      res.json({ original_url: url.originalUrl, short_url: url.shortCode });
     } else {
-      // Otherwise create shortCode and shortUrl
-      const shortUrl = baseUrl + "/" + shortCode;
-
       url = new Url({
         originalUrl,
-        shortUrl,
         shortCode
       });
       await url.save();
-
-      res.json({ original_url: originalUrl, short_url: shortUrl });
+      res.json({ original_url: originalUrl, short_url: shortCode });
     }
   } catch (error) {
     console.error(error);
@@ -49,7 +45,7 @@ router.get("/api/shorturl/:short_url", async (req, res) => {
   try {
     let url = await Url.findOne({ shortCode });
     if (url) {
-      return res.redirect(url.originalUrl);
+      return res.status(301).redirect(url.originalUrl);
     } else {
       return res.status(404).json("No url found");
     }
