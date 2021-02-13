@@ -2,7 +2,9 @@
 
 A URL shortener microservice built for the freeCodeCamp APIs and Microservices certificate.
 
-Requirements
+[View live project](https://url-shortener-microservice.gkhynes.repl.co)
+
+### Requirements
 
 - You can POST a URL to `/api/shorturl/new` and get a JSON response with `original_url` and `short_url` properties. Here's an example: `{ original_url : 'https://freeCodeCamp.org', short_url : 1}`
 

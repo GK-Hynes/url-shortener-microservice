@@ -12,7 +12,7 @@ router.post("/api/shorturl/new", async (req, res) => {
 
   // Check if passed URL is valid URL
   if (!isWebUri(originalUrl)) {
-    return res.status(400).json({ error: "invalid url" });
+    return res.json({ error: "invalid url" });
   }
 
   // Generate shortCode for short URL

@@ -1,38 +1,50 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
-    <title>URL Shortener Microservice | freeCodeCamp.org</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>URL Shortener Microservice</title>
     <link
       rel="icon"
       type="image/png"
       href="https://cdn.freecodecamp.org/universal/favicons/favicon-16x16.png"
     />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
     <link href="/public/style.css" rel="stylesheet" type="text/css" />
   </head>
 
   <body>
-    <h1>URL Shortener Microservice</h1>
     <main>
+      <h1>URL Shortener Microservice</h1>
       <section>
         <form action="api/shorturl/new" method="POST">
-          <fieldset>
-            <legend>URL Shortener</legend>
-            <label for="url_input">URL:</label>
-            <input
-              id="url_input"
-              type="text"
-              name="url"
-              placeholder="https://www.freecodecamp.org/"
-            />
-            <input type="submit" value="POST URL" />
+          <fieldset class="fieldset">
+            <legend class="legend">URL Shortener</legend>
+            <div class="input-group">
+              <div class="input-wrapper">
+                <label for="url_input">URL:</label>
+                <input
+                  id="url_input"
+                  type="text"
+                  name="url"
+                  placeholder="https://www.freecodecamp.org/"
+                />
+              </div>
+              <input class="button" type="submit" value="POST URL" />
+            </div>
           </fieldset>
         </form>
       </section>
     </main>
     <footer>
       <p>
-        Built for the
+        Built by <a href="https://github.com/GK-Hynes">Gerard Hynes</a> for the
         <a href="https://www.freecodecamp.org/">freeCodeCamp</a> APIs and
         Microservices certificate.
       </p>
