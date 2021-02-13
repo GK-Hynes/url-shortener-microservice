@@ -1,10 +1,8 @@
 require("dotenv").config();
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-
-const urlRouter = require("./routes/url");
+const urlRouter = require("./routes/index");
 const connectDB = require("./db");
 
 const app = express();
